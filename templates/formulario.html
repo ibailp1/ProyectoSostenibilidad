@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>♻️ ReciclApp – Registro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green:       #22c55e;
+    --green-bright:#4ade80;
+    --green-dim:   #052e16;
+    --green-mid:   #14532d;
+    --green-glow:  rgba(34,197,94,0.18);
+    --bg:          #080f08;
+    --surface:     #0d160d;
+    --surface2:    #111a11;
+    --border:      #1c2e1c;
+    --border2:     #243824;
+    --text:        #e2f5e2;
+    --text2:       #86b086;
+    --muted:       #4a6e4a;
+    --accent:      #bbf7d0;
+    --red:         #f87171;
+    --yellow:      #fbbf24;
+    --radius:      16px;
+    --radius-sm:   10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    min-height: 100vh;
+    overscroll-behavior: none;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: radial-gradient(ellipse 70% 35% at 50% 0%, rgba(34,197,94,0.07) 0%, transparent 65%);
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(8,15,8,0.92);
+    backdrop-filter: blur(24px);
+    border-bottom: 1px solid var(--border);
+    padding: 13px 18px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo-mark {
+    width: 36px; height: 36px;
+    background: var(--green);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    box-shadow: 0 0 18px rgba(34,197,94,0.45);
+    flex-shrink: 0;
+  }
+  .logo-name {
+    font-size: 1.25rem; font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  .logo-name em { color: var(--green); font-style: normal; }
+  .logo-tag {
+    font-size: 0.6rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.12em;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+
+  .header-clock {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.76rem;
+    color: var(--muted);
+    text-align: right;
+    line-height: 1.6;
+  }
+  .header-clock strong { color: var(--green); font-size: 0.88rem; display: block; }
+
+  /* ─── CESTA BAR ─── */
+  .cesta-bar {
+    position: sticky; top: 63px; z-index: 90;
+    background: rgba(13,22,13,0.96);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 14px;
+    display: flex; align-items: center; gap: 10px;
+    min-height: 56px; flex-wrap: wrap;
+  }
+
+  .cesta-label {
+    font-size: 0.6rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.14em;
+    color: var(--muted); white-space: nowrap; flex-shrink: 0;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .cesta-count {
+    background: var(--green); color: #000;
+    border-radius: 20px; padding: 1px 7px;
+    font-size: 0.65rem; font-weight: 700;
+    display: none;
+  }
+  .cesta-count.visible { display: inline-flex; }
+
+  .cesta-items { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; align-items: center; }
+
+  .cesta-chip {
+    background: var(--green-dim);
+    border: 1px solid rgba(34,197,94,0.25);
+    border-radius: 30px; padding: 5px 10px;
+    font-size: 0.78rem; font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+    animation: popIn 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+    min-height: 32px;
+  }
+  @keyframes popIn {
+    from { transform: scale(0.4) translateY(4px); opacity: 0; }
+    to   { transform: scale(1) translateY(0); opacity: 1; }
+  }
+
+  .chip-qty {
+    background: var(--green); color: #000;
+    border-radius: 50%; width: 18px; height: 18px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.68rem; flex-shrink: 0;
+  }
+  .chip-rm {
+    cursor: pointer; color: var(--muted);
+    font-size: 0.85rem; line-height: 1; padding: 2px 3px;
+    border-radius: 50%; transition: color 0.15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .chip-rm:active { color: var(--red); }
+
+  .cesta-empty { color: var(--muted); font-size: 0.8rem; font-style: italic; }
+
+  /* ─── REGISTRAR BTN ─── */
+  .btn-registrar {
+    background: var(--green); color: #000;
+    border: none; border-radius: var(--radius-sm);
+    padding: 10px 18px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700; font-size: 0.88rem;
+    cursor: pointer; white-space: nowrap; flex-shrink: 0;
+    min-height: 40px;
+    transition: transform 0.1s, box-shadow 0.2s, opacity 0.2s;
+    box-shadow: 0 0 18px rgba(34,197,94,0.3);
+    display: flex; align-items: center; gap: 7px;
+  }
+  .btn-registrar::before { content: '✓'; font-size: 1rem; }
+  .btn-registrar:active { transform: scale(0.95); }
+  .btn-registrar:disabled { opacity: 0.35; cursor: not-allowed; box-shadow: none; }
+
+  /* ─── CONTENT ─── */
+  .content {
+    position: relative; z-index: 1;
+    padding: 16px 14px 80px;
+    display: flex; flex-direction: column; gap: 24px;
+  }
+
+  /* ─── SECTION HEADER ─── */
+  .section-hdr {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 10px;
+  }
+  .section-icon {
+    width: 28px; height: 28px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 0.62rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.18em;
+    color: var(--muted);
+  }
+  .section-line { flex: 1; height: 1px; background: var(--border); }
+
+  /* ─── ELEMENT GRID ─── */
+  .elem-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 8px;
+  }
+
+  /* ─── ELEMENT BUTTON ─── */
+  .btn-elem {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 6px 12px;
+    cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    position: relative; user-select: none;
+    transition: border-color 0.15s, background 0.15s, box-shadow 0.15s, transform 0.1s;
+    min-height: 84px;
+  }
+  .btn-elem:active { transform: scale(0.91); }
+  .btn-elem:hover { border-color: var(--border2); }
+  .btn-elem.activo {
+    border-color: var(--green);
+    background: rgba(34,197,94,0.06);
+    box-shadow: 0 0 14px rgba(34,197,94,0.12), inset 0 0 14px rgba(34,197,94,0.04);
+  }
+
+  .elem-icon { font-size: 1.8rem; line-height: 1; }
+  .elem-name {
+    font-size: 0.7rem; font-weight: 600;
+    text-align: center; line-height: 1.2;
+    color: var(--text2);
+  }
+  .btn-elem.activo .elem-name { color: var(--accent); }
+
+  .elem-badge {
+    position: absolute; top: -8px; right: -8px;
+    background: var(--green); color: #000;
+    border-radius: 50%; width: 22px; height: 22px;
+    font-weight: 700; font-size: 0.7rem;
+    display: flex; align-items: center; justify-content: center;
+    animation: popIn 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 0 10px rgba(34,197,94,0.5);
+    border: 2px solid var(--bg);
+  }
+
+  /* ─── MODAL (bottom sheet) ─── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.72);
+    z-index: 200; align-items: flex-end; justify-content: center;
+    backdrop-filter: blur(6px);
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1.5px solid var(--border2);
+    border-top: 2px solid var(--green);
+    border-radius: 24px 24px 0 0;
+    padding: 10px 0 0;
+    width: 100%; max-width: 460px;
+    animation: slideUp 0.22s cubic-bezier(0.34, 1.2, 0.64, 1);
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+  }
+
+  .modal-handle {
+    width: 40px; height: 4px;
+    background: var(--border2); border-radius: 2px;
+    margin: 0 auto 18px;
+  }
+
+  .modal-body { padding: 0 22px 28px; text-align: center; }
+
+  .m-icon { font-size: 3rem; margin-bottom: 4px; }
+  .m-name {
+    font-size: 1.2rem; font-weight: 700;
+    color: var(--accent); margin-bottom: 4px;
+    letter-spacing: -0.01em;
+  }
+
+  /* ─── PRODUCT DESCRIPTION ─── */
+  .m-desc {
+    font-size: 0.8rem; color: var(--text2);
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin: 0 0 20px;
+    line-height: 1.45;
+    min-height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    gap: 6px;
+    transition: opacity 0.2s;
+  }
+  .m-desc::before { content: 'ℹ'; font-size: 0.75rem; color: var(--muted); flex-shrink: 0; }
+
+  /* ─── QTY CONTROL ─── */
+  .qty-wrap {
+    display: flex; align-items: center; justify-content: center; gap: 20px;
+    margin-bottom: 22px;
+  }
+
+  .qty-btn {
+    background: var(--surface2);
+    border: 1.5px solid var(--border2);
+    color: var(--text); width: 56px; height: 56px;
+    border-radius: 50%; font-size: 1.8rem; font-weight: 600;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s, border-color 0.15s, transform 0.1s;
+    user-select: none;
+  }
+  .qty-btn:active { background: var(--green-dim); border-color: var(--green); transform: scale(0.88); }
+
+  .qty-display {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    min-width: 70px;
+  }
+  .qty-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 3.5rem; font-weight: 700;
+    color: var(--green); line-height: 1;
+    text-shadow: 0 0 24px rgba(34,197,94,0.4);
+  }
+  .qty-label {
+    font-size: 0.62rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.12em;
+    color: var(--muted);
+  }
+
+  .modal-btns { display: flex; gap: 8px; }
+
+  .btn-cancel {
+    flex: 1; background: var(--surface2);
+    border: 1.5px solid var(--border); color: var(--muted);
+    border-radius: var(--radius-sm); padding: 15px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.95rem; font-weight: 600;
+    cursor: pointer; min-height: 50px;
+    transition: background 0.15s;
+  }
+  .btn-cancel:active { background: rgba(255,255,255,0.04); }
+
+  .btn-add {
+    flex: 2; background: var(--green); border: none;
+    color: #000; border-radius: var(--radius-sm); padding: 15px;
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+    font-size: 0.95rem; cursor: pointer; min-height: 50px;
+    transition: transform 0.1s, box-shadow 0.15s;
+    box-shadow: 0 0 18px rgba(34,197,94,0.3);
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .btn-add:active { transform: scale(0.96); box-shadow: 0 0 8px rgba(34,197,94,0.2); }
+
+  /* ─── TOAST ─── */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    padding: 12px 24px; border-radius: 40px;
+    font-weight: 700; font-size: 0.9rem;
+    transition: transform 0.28s cubic-bezier(0.34, 1.2, 0.64, 1);
+    z-index: 300; white-space: nowrap;
+    letter-spacing: 0.01em; pointer-events: none;
+  }
+  .toast.ok {
+    background: var(--green); color: #000;
+    box-shadow: 0 8px 28px rgba(34,197,94,0.35);
+  }
+  .toast.err {
+    background: var(--red); color: #fff;
+    box-shadow: 0 8px 28px rgba(248,113,113,0.35);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-mark">♻️</div>
+    <div>
+      <div class="logo-name">Recicl<em>App</em></div>
+      <div class="logo-tag">Registro de residuos</div>
+    </div>
+  </div>
+  <div class="header-clock">
+    <strong id="clock-time">--:--:--</strong>
+    <span id="clock-date"></span>
+  </div>
+</header>
+
+<div class="cesta-bar">
+  <div class="cesta-label">
+    🧺 Cesta
+    <span class="cesta-count" id="cesta-count"></span>
+  </div>
+  <div class="cesta-items" id="cesta-items">
+    <span class="cesta-empty">Sin elementos seleccionados</span>
+  </div>
+  <button class="btn-registrar" id="btn-registrar" onclick="registrar()" disabled>
+    Registrar
+  </button>
+</div>
+
+<div class="content" id="content"></div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-body">
+      <div class="m-icon" id="m-icon"></div>
+      <div class="m-name" id="m-name"></div>
+      <div class="m-desc" id="m-desc">Cargando descripción…</div>
+      <div class="qty-wrap">
+        <button class="qty-btn" onclick="changeQty(-1)">−</button>
+        <div class="qty-display">
+          <div class="qty-num" id="m-qty">1</div>
+          <div class="qty-label">unidades</div>
+        </div>
+        <button class="qty-btn" onclick="changeQty(1)">+</button>
+      </div>
+      <div class="modal-btns">
+        <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+        <button class="btn-add" onclick="confirmAdd()">✓ Añadir</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const CATEGORIAS = {{ categorias | tojson }};
+
+// Brief descriptions for each element (max ~10 words)
+const DESCRIPCIONES = {
+  "Ratón":                  "Dispositivo señalador de escritorio o portátil",
+  "Teclado":                "Periférico de entrada con teclas alfanuméricas",
+  "Cable USB":              "Cable de datos y carga universal (USB)",
+  "Cable HDMI":             "Cable de vídeo y audio de alta definición",
+  "Cable de red":           "Cable Ethernet para conexión a internet cableada",
+  "Cargador":               "Adaptador de corriente para cargar dispositivos",
+  "Móvil":                  "Teléfono inteligente de bolsillo con pantalla táctil",
+  "Tablet":                 "Dispositivo táctil portátil de pantalla mediana",
+  "Portátil":               "Ordenador personal compacto con batería integrada",
+  "Ordenador de sobremesa": "Unidad de procesamiento fija para escritorio",
+  "Monitor":                "Pantalla de visualización externa para ordenadores",
+  "Impresora":              "Dispositivo que imprime documentos en papel",
+  "Batería":                "Acumulador recargable de energía eléctrica",
+  "Pila":                   "Pila de un solo uso no recargable",
+  "Auriculares":            "Dispositivo de audio personal para los oídos",
+  "Altavoz":                "Dispositivo de sonido para escuchar audio",
+  "Disco duro":             "Unidad de almacenamiento masivo de datos",
+  "Pendrive":               "Memoria USB portátil de almacenamiento compacto",
+  "Router":                 "Dispositivo de red para distribuir internet WiFi",
+  "Otro":                   "Residuo electrónico no clasificado en otras categorías",
+};
+
+let basket = {};
+let modalItem = null;
+let modalQty = 1;
+
+// Build grupos
+const grupos = {};
+for (const [nombre, info] of Object.entries(CATEGORIAS)) {
+  if (!grupos[info.grupo]) grupos[info.grupo] = [];
+  grupos[info.grupo].push({ nombre, ...info });
+}
+
+// Group icons
+const GRUPO_ICONS = {
+  "Periféricos":   "🖱️",
+  "Cables":        "🔌",
+  "Móviles":       "📱",
+  "Ordenadores":   "💻",
+  "Impresoras":    "🖨️",
+  "Baterías":      "🔋",
+  "Audio":         "🎧",
+  "Almacenamiento":"💾",
+  "Red":           "📡",
+  "Otros":         "♻️",
+};
+
+const content = document.getElementById('content');
+for (const [grupo, items] of Object.entries(grupos)) {
+  const icon = GRUPO_ICONS[grupo] || '📦';
+  const sec = document.createElement('section');
+  sec.innerHTML = `
+    <div class="section-hdr">
+      <div class="section-icon">${icon}</div>
+      <div class="section-title">${grupo}</div>
+      <div class="section-line"></div>
+    </div>
+    <div class="elem-grid" id="g-${grupo}"></div>`;
+  content.appendChild(sec);
+
+  const grid = document.getElementById(`g-${grupo}`);
+  for (const item of items) {
+    const btn = document.createElement('button');
+    btn.className = 'btn-elem';
+    btn.id = `elem-${item.nombre}`;
+    btn.innerHTML = `<span class="elem-icon">${item.icono}</span><span class="elem-name">${item.nombre}</span>`;
+    btn.onclick = () => openModal(item);
+    grid.appendChild(btn);
+  }
+}
+
+// ─── MODAL ───
+function openModal(item) {
+  modalItem = item;
+  modalQty = basket[item.nombre]?.cantidad || 1;
+  document.getElementById('m-icon').textContent = item.icono;
+  document.getElementById('m-name').textContent = item.nombre;
+  document.getElementById('m-qty').textContent = modalQty;
+
+  // Show description
+  const desc = DESCRIPCIONES[item.nombre] || 'Residuo electrónico para reciclar';
+  document.getElementById('m-desc').childNodes[1]
+    ? (document.getElementById('m-desc').lastChild.textContent = desc)
+    : document.getElementById('m-desc').appendChild(document.createTextNode(desc));
+  document.getElementById('m-desc').textContent = '';
+  document.getElementById('m-desc').textContent = desc;
+
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  modalItem = null;
+}
+
+function changeQty(d) {
+  modalQty = Math.max(1, Math.min(99, modalQty + d));
+  document.getElementById('m-qty').textContent = modalQty;
+}
+
+function confirmAdd() {
+  if (!modalItem) return;
+  basket[modalItem.nombre] = { icono: modalItem.icono, cantidad: modalQty };
+  updateUI();
+  closeModal();
+}
+
+// ─── UI UPDATE ───
+function updateUI() {
+  const cestaEl = document.getElementById('cesta-items');
+  const btnReg  = document.getElementById('btn-registrar');
+  const countEl = document.getElementById('cesta-count');
+  const keys    = Object.keys(basket);
+  const totalQty = keys.reduce((s, k) => s + basket[k].cantidad, 0);
+
+  if (keys.length === 0) {
+    cestaEl.innerHTML = '<span class="cesta-empty">Sin elementos seleccionados</span>';
+    btnReg.disabled = true;
+    countEl.classList.remove('visible');
+  } else {
+    cestaEl.innerHTML = keys.map(n => `
+      <div class="cesta-chip">
+        <span>${basket[n].icono} ${n}</span>
+        <span class="chip-qty">${basket[n].cantidad}</span>
+        <span class="chip-rm" onclick="removeElem('${n}')">✕</span>
+      </div>`).join('');
+    btnReg.disabled = false;
+    countEl.textContent = totalQty;
+    countEl.classList.add('visible');
+  }
+
+  // Update element buttons
+  for (const [nombre] of Object.entries(CATEGORIAS)) {
+    const btn = document.getElementById(`elem-${nombre}`);
+    if (!btn) continue;
+    const badge = btn.querySelector('.elem-badge');
+    if (badge) badge.remove();
+    if (basket[nombre]) {
+      btn.classList.add('activo');
+      const b = document.createElement('div');
+      b.className = 'elem-badge';
+      b.textContent = basket[nombre].cantidad;
+      btn.appendChild(b);
+    } else {
+      btn.classList.remove('activo');
+    }
+  }
+}
+
+function removeElem(nombre) {
+  delete basket[nombre];
+  updateUI();
+}
+
+// ─── REGISTRAR ───
+async function registrar() {
+  const elementos = Object.entries(basket).map(([nombre, info]) => ({
+    nombre, cantidad: info.cantidad
+  }));
+  if (!elementos.length) return;
+  const btn = document.getElementById('btn-registrar');
+  btn.disabled = true;
+  try {
+    const res = await fetch('/api/registrar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ elementos })
+    });
+    const data = await res.json();
+    if (data.ok) {
+      basket = {};
+      updateUI();
+      toast(`✅ ${data.registrados} tipo(s) registrado(s) correctamente`, 'ok');
+    } else {
+      toast('❌ Error al registrar', 'err');
+      btn.disabled = false;
+    }
+  } catch {
+    toast('❌ Sin conexión con el servidor', 'err');
+    btn.disabled = false;
+  }
+}
+
+// ─── TOAST ───
+function toast(msg, type = 'ok') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `toast ${type}`;
+  void el.offsetWidth;
+  setTimeout(() => el.classList.add('show'), 10);
+  setTimeout(() => el.classList.remove('show'), 3200);
+}
+
+// ─── CLOCK ───
+function tick() {
+  const now = new Date();
+  document.getElementById('clock-time').textContent = now.toLocaleTimeString('es-ES');
+  document.getElementById('clock-date').textContent =
+    now.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' });
+}
+tick();
+setInterval(tick, 1000);
+
+// Close modal on overlay click
+document.getElementById('modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal')) closeModal();
+});
+</script>
+</body>
+</html>
