@@ -62,7 +62,7 @@ reciclapp/
 
 ```bash
 # 1. Clonar el repositorio
-git clone https://github.com/TU_USUARIO/reciclapp.git
+git clone https://github.com/ibailp1/ProyectoSostenibilidad.git
 cd reciclapp
 
 # 2. (Recomendado) Crear entorno virtual
@@ -80,40 +80,6 @@ python app.py
 La app estará disponible en:
 - **Formulario táctil:** http://localhost:5000/
 - **Dashboard:** http://localhost:5000/dashboard
-
----
-
-## 🌍 Despliegue en producción
-
-### Opción A – Railway (recomendado, gratuito)
-
-1. Crear cuenta en [railway.app](https://railway.app)
-2. Conectar el repositorio GitHub
-3. Railway detecta Flask automáticamente
-4. Añadir variable de entorno: `PORT=5000`
-5. ¡Listo! La URL pública se genera automáticamente.
-
-> **Nota:** Para producción con Railway u otros servicios PaaS, sustituir SQLite por **PostgreSQL** (Railway lo provee gratis). Ver sección "Cómo continuar".
-
-### Opción B – Render
-
-1. Crear cuenta en [render.com](https://render.com)
-2. Nuevo servicio Web → conectar repo GitHub
-3. Build Command: `pip install -r requirements.txt`
-4. Start Command: `python app.py`
-
-### Opción C – Raspberry Pi / servidor local
-
-```bash
-# Instalar en una RPi con Raspberry Pi OS
-sudo apt update && sudo apt install python3-pip -y
-pip3 install -r requirements.txt
-python3 app.py &   # Ejecutar en background
-```
-
-Acceder desde cualquier dispositivo de la red local en `http://IP_RASPBERRY:5000`
-
----
 
 ## 📡 API REST
 
@@ -158,41 +124,15 @@ CREATE TABLE registros (
 );
 ```
 
----
-
-## 🔧 Cómo continuar el proyecto
-
-### Funcionalidades sugeridas para ampliar la nota
-
-1. **Autenticación de usuarios** – Flask-Login para que cada grupo/voluntario tenga su sesión.
-2. **Exportar a CSV/Excel** – Botón en el dashboard para descargar los datos del día.
-3. **Modo offline / PWA** – Service Worker para que funcione sin conexión y sincronice al volver.
-4. **Migrar a PostgreSQL** – Para despliegue en producción sin riesgo de perder datos.
-5. **Gráficos avanzados** – Integrar Chart.js o Plotly para visualizaciones más ricas.
-6. **Notificaciones** – Alertas cuando se supere un umbral diario.
-7. **API pública documentada** – Swagger/OpenAPI con Flask-RESTX.
-8. **Tests automatizados** – pytest para las rutas de la API.
-
-### Migrar de SQLite a PostgreSQL
-
-```python
-# En app.py, cambiar:
-import psycopg2
-DB_URL = os.environ.get("DATABASE_URL", "postgresql://user:pass@localhost/reciclapp")
-```
-
-Y añadir `psycopg2-binary` a `requirements.txt`.
-
----
-
 ## 👥 Equipo de desarrollo
 
-| Nombre | Rol |
-|---|---|
-| — | Backend Flask / API |
-| — | Frontend formulario táctil |
-| — | Frontend dashboard |
-| — | Base de datos / despliegue |
+| Nombre |
+|---|
+| Oihan bbsita BBC |
+| Lil Ibai nigga |
+| Mario Kawai uwu |
+| Iker Tiker Miker Piker |
+| Luisito No Comunica |
 
 ---
 
